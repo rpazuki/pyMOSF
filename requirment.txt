@@ -1,0 +1,16 @@
+addict
+numpy
+pytoml
+rubicon-objc
+# For Kivy
+"kivy[base]"
+# For Beeware
+PyGObject==3.50.0
+briefcase
+toga
+
+
+
+##########
+# dev
+pytest

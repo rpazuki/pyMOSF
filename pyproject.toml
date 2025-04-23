@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=64.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyMOSF"
+version = "0.1"
+description = "Python package for Multi-OS, Multi-Framework UI apps."
+authors = [
+    {name = "Roozbeh H. Pazuki", email = "rpazuki@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.6"
+license = {text = "GNU GENERAL PUBLIC LICENSE Version 3"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GPLv3 License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "numpy>=1.18.0",
+    "addict>=2.4.0",
+    "pytoml>=0.1.21",
+    "rubicon-objc>=0.5.0",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/rpazuki/pyMOF"
+
+# You can keep using your setup.cfg for dependencies
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0.0",
+    "flake8>=3.8.0",
+]
+beeware = [
+    "PyGObject==3.50.0",
+    "briefcase>=0.3.22",
+    "toga==0.4.9",
+]
+kivy = [
+    "kivy>=2.3.1",
+]
+all = [
+    "pytest>=6.0.0",
+    "flake8>=3.8.0",
+    "PyGObject==3.50.0",
+    "briefcase>=0.3.22",
+    "toga==0.4.9",
+    "kivy>=2.3.1",
+]
