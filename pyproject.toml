@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64.0.0", "wheel"]
+requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -11,10 +11,9 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.6"
-license = {text = "GNU GENERAL PUBLIC LICENSE Version 3"}
+license = {text = "GPL version 3, excluding DRM provisions"}
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GPLv3 License",
     "Operating System :: OS Independent",
 ]
 
@@ -25,9 +24,9 @@ dependencies = [
     "rubicon-objc>=0.5.0",
 ]
 
-
 [project.urls]
-Homepage = "https://github.com/rpazuki/pyMOF"
+Homepage = "https://github.com/rpazuki/pyMOSF"
+Issues = "https://github.com/rpazuki/pyMOSF/issues"
 
 # You can keep using your setup.cfg for dependencies
 
