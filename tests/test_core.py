@@ -1,6 +1,5 @@
 import pytest
 
-from pyMOSF.config import Config as core_config
 from pyMOSF.config import Dict
 from pyMOSF.core import (
     AbstractApp,
@@ -14,11 +13,7 @@ from pyMOSF.core import (
     SyncService,
 )
 
-
-@pytest.fixture(autouse=True)
-def default_config():
-    core_config.log.to_std = False
-    core_config.log.to_file = False
+ServiceRegistry._framework = "TOGA"
 
 
 class SingletonSyncService(SyncService):

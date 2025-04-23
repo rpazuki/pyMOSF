@@ -50,7 +50,7 @@ from enum import Enum
 from inspect import signature
 from typing import Any, Callable, Mapping
 
-from pyMOSF.config import Config, Configurable, GUIFramework, Settings
+from pyMOSF.config import Configurable, Settings
 from pyMOSF.core.__loggers__ import file_out_log, std_out_log
 
 log = logging.getLogger(__name__)
@@ -186,25 +186,11 @@ class AbstractApp(ABC, Configurable):
 
     @property
     def path(self):
-        match Config.gui_framework:
-            case GUIFramework.TOGA:
-                return self.paths.app  # type: ignore
-            case GUIFramework.KIVY:
-                from pathlib import Path
-                Path(self.directory)  # type: ignore
-            case _ as ui:
-                raise NotImplementedError(f"Unknown ui_framework: '{ui}'")
+        raise NotImplementedError()
 
     @property
     def data_path(self):
-        match Config.gui_framework:
-            case GUIFramework.TOGA:
-                return self.paths.data  # type: ignore
-            case GUIFramework.KIVY:
-                from pathlib import Path
-                return Path(self.user_data_dir)  # type: ignore
-            case _ as ui:
-                raise NotImplementedError(f"Unknown ui_framework: '{ui}'")
+        raise NotImplementedError()
 
     def on_begin(self):
         """The event handler that will be invoked when the app is about to start.
@@ -217,7 +203,6 @@ class AbstractApp(ABC, Configurable):
         them in ServiceRegistry.
         """
         self._set_config()
-        #
         self.on_load()
 
     def on_load(self):
@@ -304,26 +289,27 @@ class AbstractApp(ABC, Configurable):
 
         recursive(root)
 
-    def _set_config(self):
-        """Os and Framework-related config (e.g. toga or kivy).
-        """
-        if Config.log.to_std:
-            std_out_log(log_level=Config.log.log_level)
-        if Config.log.to_file:
-            file_out_log(path=self.data_path / Config.log.file_name,
-                         log_level=Config.log.log_level)
-        #
-        super()._set_config()
-
     def update(self, **kwargs):
         """Update the component with new data."""
         self.layout.on_update(**kwargs)
+
+    def set_logger(self,
+                   std_out: bool = True,
+                   file_out: bool = False,
+                   file_name: str = "log.txt",
+                   log_level: int = logging.DEBUG):
+        if std_out:
+            std_out_log(log_level=logging.getLevelName(log_level))
+        if file_out:
+            file_out_log(path=self.data_path / file_name,
+                         log_level=logging.getLevelName(log_level))
 
 
 class ServiceRegistry(object):
     """A singleton object that store the required (id: ServiceStrategy).
     """
     _instance = None
+    _framework: str = ""
 
     def __new__(cls):
         if cls._instance is None:
@@ -387,15 +373,15 @@ class ServiceRegistry(object):
 
         def attach(callback):
             # setattr(element, registeredEventType.name.lower(), callback)
-            match Config.gui_framework:
-                case GUIFramework.TOGA:
+            match ServiceRegistry._framework:
+                case "TOGA":
                     # from toga.handlers import wrapped_handler  # type: ignore
 
                     handler = callback  # wrapped_handler(element, callback)
                     # handler = wrapped_handler(element, callback)
                     # e.g. element.on_press = handler
                     setattr(element, event.eventType.name.lower(), handler)
-                case GUIFramework.KIVY:
+                case "KIVY":
                     # Only BIND
                     if event.eventType == EventType.BIND:
                         if event.property_name == "":
@@ -417,7 +403,7 @@ class ServiceRegistry(object):
                         element.bind(**kwrgs)
                 case _:
                     raise ValueError(
-                        f" Unknown UI Framework: {Config.gui_framework}")
+                        f" Unknown UI Framework: {ServiceRegistry._framework}")
         #
         element_event = event.element_event(element)
         if hasattr(element_event, "_raw"):
@@ -593,7 +579,7 @@ class EventDispatcher:
             This is useful when the arguments need to be updated, e.g., from the
             value in the UI.
         """
-        if Config.gui_framework == GUIFramework.TOGA:
+        if ServiceRegistry._framework == "TOGA":
             for binded_method, sig in self.listeners_framework.get(event_name, []):
                 binded_method(*args, **kwargs)
 
@@ -656,7 +642,7 @@ class EventDispatcher:
             This is useful when the arguments need to be updated, e.g., from the
             value in the UI.
         """
-        if Config.gui_framework == GUIFramework.TOGA:
+        if ServiceRegistry._framework == "TOGA":
             for binded_method, sig in self.async_listeners_framework.get(event_name, []):
                 binded_method(*args, **kwargs)
         for binded_method in self.async_listeners.get(event_name, []):

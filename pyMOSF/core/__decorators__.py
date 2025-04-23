@@ -2,8 +2,7 @@ import functools
 from typing import Any, Callable
 
 from pyMOSF.config import Dict
-from pyMOSF.config.configs import CONFIGS
-from pyMOSF.core import EventType, GUIFramework
+from pyMOSF.core import EventType
 from pyMOSF.core.pipelines import (
     AbstractProcess,
     ProcessFactory,
@@ -63,28 +62,25 @@ def silence_crossed_events(eventType: EventType, element1,  element2):
 
 
 def _silence(element, eventType: EventType, second_element):
+    try:
+        import toga  # noqa
+    except ImportError:
+        raise NotImplementedError("This function is only available for Toga.")
     eventName = eventType.name.lower()
     # The element's event that is supposed to be called
-    match CONFIGS.gui_framework:
-        case GUIFramework.TOGA:
-            event = getattr(element, f"_{eventName}")
-            # Decorator for the element's event that is supposed to be called
+    event = getattr(element, f"_{eventName}")
+    # Decorator for the element's event that is supposed to be called
 
-            def decorator(widget,  *args):
-                # Temporarily store and disable the second element's event
-                stored = getattr(second_element, f"_{eventName}")
-                setattr(second_element, eventName, None)
-                # call the original event handler
-                event(widget,  *args)
-                # Set back the second element's event
-                setattr(second_element, eventName, stored)
-            # reroute the element's event handler to the decorator
-            setattr(element, eventName, decorator)
-        case GUIFramework.KIVY:
-            raise NotImplementedError(
-                "Kivy is not implemented yet.")
-        case _:
-            raise ValueError(f"Unknown GUI framework: {CONFIGS.gui_framework}")
+    def decorator(widget,  *args):
+        # Temporarily store and disable the second element's event
+        stored = getattr(second_element, f"_{eventName}")
+        setattr(second_element, eventName, None)
+        # call the original event handler
+        event(widget,  *args)
+        # Set back the second element's event
+        setattr(second_element, eventName, stored)
+    # reroute the element's event handler to the decorator
+    setattr(element, eventName, decorator)
 
 
 def processLogic(func: Callable[..., Dict]) -> Callable[..., ProcessLogic]:

@@ -40,6 +40,7 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 from kivy.app import App as kivyApp  # type: ignore #
 
@@ -48,7 +49,15 @@ from kivy.uix.boxlayout import BoxLayout  # type: ignore
 from kivy.uix.screenmanager import Screen, ScreenManager  # type: ignore
 
 from pyMOSF.config import Configurable
-from pyMOSF.core import Component, Layout, MultiLayoutApp, StackedLayout
+from pyMOSF.core import (
+    Component,
+    Layout,
+    MultiLayoutApp,
+    ServiceRegistry,
+    StackedLayout,
+)
+
+ServiceRegistry._framework = "KIVY"
 
 log = logging.getLogger(__name__)
 
@@ -134,6 +143,14 @@ class KivyMultiLayoutApp(MultiLayoutApp, kivyApp):
         self._screen_lookup = {}
         self._current_layout = init_layout
         super().__init__(self._main_container, init_layout, **kwargs)
+
+    @property
+    def path(self):
+        return Path(self.directory)  # type: ignore
+
+    @property
+    def data_path(self):
+        return Path(self.user_data_dir)  # type: ignore
 
     @property
     def current_layout(self) -> KivyLayout | KivyStackedLayout:

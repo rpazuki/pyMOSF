@@ -42,15 +42,18 @@
           exception when they are used for services argument.
 """
 from __future__ import annotations
+from pyMOSF.core import Component, Layout, MultiLayoutApp, StackedLayout
+from pyMOSF.config import Configurable
+from toga.style.pack import CENTER, COLUMN  # type: ignore
+from toga.style import Pack
+import toga
 
 import logging
 
-import toga
-from toga.style import Pack
-from toga.style.pack import CENTER, COLUMN  # type: ignore
+from pyMOSF.core import ServiceRegistry
 
-from pyMOSF.config import Configurable
-from pyMOSF.core import Component, Layout, MultiLayoutApp, StackedLayout
+ServiceRegistry._framework = "TOGA"
+
 
 log = logging.getLogger(__name__)
 
@@ -139,6 +142,14 @@ class TogaMultiLayoutApp(MultiLayoutApp, toga.App):
         )
         self._current_layout = init_layout
         super().__init__(self._main_container, init_layout, **kwargs)
+
+    @property
+    def path(self):
+        return self.paths.app  # type: ignore
+
+    @property
+    def data_path(self):
+        return self.paths.data  # type: ignore
 
     @property
     def current_layout(self) -> TogaLayout | TogaStackedLayout:
