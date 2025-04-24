@@ -1,0 +1,7 @@
+
+0.1.1.2
+------------------------
+1- Add GUIFramework.
+2- Default log level from debug to error.
+3- Add an empty template project for each framework.
+4- Include each frameworks' default file open service.

@@ -70,18 +70,18 @@ class DocumentPickerDelegate(NSObject,  # type: ignore
 
 class IOSFileOpen(core.AsyncService):
     def __init__(self,
-                 temp_path: Path,
-                 document_types: list[str] = ["UTTypeMP3"],
-                 allowsMultipleSelection: bool = True,
+                 initial_directory: Path,
+                 file_types: list[str] = ["UTTypeData"],
+                 multiple_select: bool = True,
                  ) -> None:
         super().__init__()
         # IMPORTANT: the delegate must be create and store here
         # because the delegate is a weak reference
         # and can be deleted without any reference in Python side
         self.delegate = DocumentPickerDelegate.alloc().init_()
-        self.temp_path = temp_path
-        self.document_types = document_types
-        self.allowsMultipleSelection = allowsMultipleSelection
+        self.temp_path = initial_directory
+        self.document_types = file_types
+        self.allowsMultipleSelection = multiple_select
         self.libcf = load_library("UniformTypeIdentifiers")
 
     @safe_async_call(log)

@@ -42,17 +42,23 @@
           exception when they are used for services argument.
 """
 from __future__ import annotations
-from pyMOSF.core import Component, Layout, MultiLayoutApp, StackedLayout
-from pyMOSF.config import Configurable
-from toga.style.pack import CENTER, COLUMN  # type: ignore
-from toga.style import Pack
-import toga
 
 import logging
 
-from pyMOSF.core import ServiceRegistry
+import toga
+from toga.style import Pack
+from toga.style.pack import CENTER, COLUMN  # type: ignore
 
-ServiceRegistry._framework = "TOGA"
+from pyMOSF.config import Configurable, GUIFramework
+from pyMOSF.core import (
+    Component,
+    Layout,
+    MultiLayoutApp,
+    ServiceRegistry,
+    StackedLayout,
+)
+
+ServiceRegistry._framework = GUIFramework.TOGA
 
 
 log = logging.getLogger(__name__)

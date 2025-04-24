@@ -48,7 +48,7 @@ from kivy.app import App as kivyApp  # type: ignore #
 from kivy.uix.boxlayout import BoxLayout  # type: ignore
 from kivy.uix.screenmanager import Screen, ScreenManager  # type: ignore
 
-from pyMOSF.config import Configurable
+from pyMOSF.config import Configurable, GUIFramework
 from pyMOSF.core import (
     Component,
     Layout,
@@ -57,7 +57,7 @@ from pyMOSF.core import (
     StackedLayout,
 )
 
-ServiceRegistry._framework = "KIVY"
+ServiceRegistry._framework = GUIFramework.KIVY
 
 log = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 import pytest
 
-from pyMOSF.config import Dict
+from pyMOSF.config import Dict, GUIFramework
 from pyMOSF.core import (
     AbstractApp,
     AbstractLayout,
@@ -13,7 +13,7 @@ from pyMOSF.core import (
     SyncService,
 )
 
-ServiceRegistry._framework = "TOGA"
+ServiceRegistry._framework = GUIFramework.TOGA
 
 
 class SingletonSyncService(SyncService):

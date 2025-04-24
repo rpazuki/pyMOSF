@@ -1,0 +1,50 @@
+#:kivy 1.0.9
+#:import win kivy.core.window
+<ToolbarComponent>
+    size_hint: 1, None
+    height : '32dp'
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: 5
+        spacing: 5
+        size_hint: 1, None
+        height: '30dp'
+        pos_hint: {'top': 1}
+        Button:
+            text: 'press me'
+            id: btn_press_me
+            size_hint_y: None
+            padding: 5
+            spacing: 5
+            pos_hint: {'top': 1.}
+            height: '30dp'
+            on_release: root.button_pressed()
+        Button:
+            text: 'open file'
+            id: open_file
+            size_hint_y: None
+            padding: 5
+            spacing: 5
+            pos_hint: {'top': 1.}
+            height: '30dp'
+
+
+<TextViewComponent>
+    orientation: 'vertical'
+    size_hint: 1, 1
+    height : '90dp'
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: 5
+        spacing: 5
+        size_hint: 1, None
+        height: '30dp'
+        pos_hint: {'top': 1}
+        Label:
+            text: ''
+            id: label
+            size_hint_y: None
+            padding: 5
+            spacing: 5
+            height: '30dp'
+

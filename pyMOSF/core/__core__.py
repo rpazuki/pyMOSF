@@ -50,7 +50,7 @@ from enum import Enum
 from inspect import signature
 from typing import Any, Callable, Mapping
 
-from pyMOSF.config import Configurable, Settings
+from pyMOSF.config import Configurable, GUIFramework, Settings
 from pyMOSF.core.__loggers__ import file_out_log, std_out_log
 
 log = logging.getLogger(__name__)
@@ -297,7 +297,7 @@ class AbstractApp(ABC, Configurable):
                    std_out: bool = True,
                    file_out: bool = False,
                    file_name: str = "log.txt",
-                   log_level: int = logging.DEBUG):
+                   log_level: int = logging.ERROR):
         if std_out:
             std_out_log(log_level=logging.getLevelName(log_level))
         if file_out:
@@ -309,7 +309,7 @@ class ServiceRegistry(object):
     """A singleton object that store the required (id: ServiceStrategy).
     """
     _instance = None
-    _framework: str = ""
+    _framework: GUIFramework = GUIFramework.UKNOWN
 
     def __new__(cls):
         if cls._instance is None:
@@ -374,14 +374,14 @@ class ServiceRegistry(object):
         def attach(callback):
             # setattr(element, registeredEventType.name.lower(), callback)
             match ServiceRegistry._framework:
-                case "TOGA":
+                case GUIFramework.TOGA:
                     # from toga.handlers import wrapped_handler  # type: ignore
 
                     handler = callback  # wrapped_handler(element, callback)
                     # handler = wrapped_handler(element, callback)
                     # e.g. element.on_press = handler
                     setattr(element, event.eventType.name.lower(), handler)
-                case "KIVY":
+                case GUIFramework.KIVY:
                     # Only BIND
                     if event.eventType == EventType.BIND:
                         if event.property_name == "":
@@ -579,7 +579,7 @@ class EventDispatcher:
             This is useful when the arguments need to be updated, e.g., from the
             value in the UI.
         """
-        if ServiceRegistry._framework == "TOGA":
+        if ServiceRegistry._framework == GUIFramework.TOGA:
             for binded_method, sig in self.listeners_framework.get(event_name, []):
                 binded_method(*args, **kwargs)
 
@@ -642,7 +642,7 @@ class EventDispatcher:
             This is useful when the arguments need to be updated, e.g., from the
             value in the UI.
         """
-        if ServiceRegistry._framework == "TOGA":
+        if ServiceRegistry._framework == GUIFramework.TOGA:
             for binded_method, sig in self.async_listeners_framework.get(event_name, []):
                 binded_method(*args, **kwargs)
         for binded_method in self.async_listeners.get(event_name, []):

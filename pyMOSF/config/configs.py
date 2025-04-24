@@ -10,9 +10,16 @@ from __future__ import annotations
 
 import json
 import platform
+from enum import Enum
 from pathlib import Path
 
 from addict import Dict as DefaultDict
+
+
+class GUIFramework(str, Enum):
+    TOGA = "TOGA"
+    KIVY = "KIVY"
+    UKNOWN = "UKNOWN"
 
 
 class Dict(DefaultDict):
