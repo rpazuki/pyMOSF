@@ -12,4 +12,12 @@
 ## pyMOSF (python Multi-OF Multi-Framework)
 > A lightweight python package for Multi-OS, Multi-Framework UI apps. It support [BeeWare](https://beeware.org/) and [Kivy](https://kivy.org/) frameworks.
 
+## macOS
+
+```
+brew install cairo
+brew install pyobject3
+
+```
+
 

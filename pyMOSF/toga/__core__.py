@@ -49,7 +49,7 @@ import toga
 from toga.style import Pack
 from toga.style.pack import CENTER, COLUMN  # type: ignore
 
-from pyMOSF.config import Configurable, GUIFramework
+from pyMOSF.config import Configurable, GUIFramework, Settings
 from pyMOSF.core import (
     Component,
     Layout,
@@ -142,12 +142,15 @@ class TogaStackedLayout(StackedLayout, Promiseable):
 
 
 class TogaMultiLayoutApp(MultiLayoutApp, toga.App):
-    def __init__(self, init_layout: TogaLayout | TogaStackedLayout, **kwargs) -> None:
+    def __init__(self,
+                 init_layout: TogaLayout | TogaStackedLayout,
+                 settings: Settings | None = None,
+                 **kwargs) -> None:
         self._main_container = toga.Box(
             style=Pack(direction=COLUMN, alignment=CENTER, flex=1)
         )
         self._current_layout = init_layout
-        super().__init__(self._main_container, init_layout, **kwargs)
+        super().__init__(self._main_container, init_layout, settings, **kwargs)
 
     @property
     def path(self):

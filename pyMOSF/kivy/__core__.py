@@ -48,7 +48,7 @@ from kivy.app import App as kivyApp  # type: ignore #
 from kivy.uix.boxlayout import BoxLayout  # type: ignore
 from kivy.uix.screenmanager import Screen, ScreenManager  # type: ignore
 
-from pyMOSF.config import Configurable, GUIFramework
+from pyMOSF.config import Configurable, GUIFramework, Settings
 from pyMOSF.core import (
     Component,
     Layout,
@@ -136,13 +136,16 @@ class KivyStackedLayout(StackedLayout):
 
 
 class KivyMultiLayoutApp(MultiLayoutApp, kivyApp):
-    def __init__(self, init_layout: KivyLayout | KivyStackedLayout, **kwargs) -> None:
+    def __init__(self,
+                 init_layout: KivyLayout | KivyStackedLayout,
+                 settings: Settings | None = None,
+                 **kwargs) -> None:
         self._main_container = BoxLayout()
         self._main_container.orientation = 'vertical'
         self.manager = ScreenManager()
         self._screen_lookup = {}
         self._current_layout = init_layout
-        super().__init__(self._main_container, init_layout, **kwargs)
+        super().__init__(self._main_container, init_layout, settings, **kwargs)
 
     @property
     def path(self):

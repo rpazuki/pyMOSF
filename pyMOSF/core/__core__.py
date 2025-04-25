@@ -157,9 +157,10 @@ class AbstractLayout(ABC, Configurable,  Updateable):
 class AbstractApp(ABC, Configurable):
     def __init__(self,
                  layout: AbstractLayout,
+                 settings: Settings | None = None,
                  **kwargs) -> None:
         super(AbstractApp, self).__init__(**kwargs)
-        self._settings = None
+        self._settings = settings
         self.layout = layout
         self.reset_event_dispatchers_table()
 

@@ -5,6 +5,7 @@ import inspect
 from abc import abstractmethod
 from typing import TypeVar
 
+from pyMOSF.config import Settings
 from pyMOSF.core.__core__ import AbstractApp, AbstractLayout, Configurable, Updateable
 
 Box = TypeVar("Box")
@@ -193,6 +194,7 @@ class MultiLayoutApp(AbstractApp):
     def __init__(self,
                  main_container,
                  init_layout: Layout,
+                 settings: Settings | None = None,
                  **kwargs) -> None:
         if not isinstance(init_layout, Layout):
             raise ValueError(
@@ -203,7 +205,7 @@ class MultiLayoutApp(AbstractApp):
         self._current_layout = init_layout
         #
         super(MultiLayoutApp, self).__init__(
-            init_layout, **kwargs)
+            init_layout, settings, **kwargs)
 
     @property
     def main_container(self):
