@@ -84,6 +84,7 @@ class IOSFileOpen(core.AsyncService):
         self.document_types = file_types
         self.allowsMultipleSelection = multiple_select
         self.libcf = load_library("UniformTypeIdentifiers")
+        self.picker = None
 
     @safe_async_call(log)
     async def handle_event(self,
@@ -97,10 +98,10 @@ class IOSFileOpen(core.AsyncService):
         # You can specify other UTIs if needed
         document_types = [objc_const(self.libcf, item)
                           for item in self.document_types]
-        picker = UIDocumentPickerViewController.alloc()  # type: ignore
-        picker = picker.initForOpeningContentTypes_(
+        self.picker = UIDocumentPickerViewController.alloc()  # type: ignore
+        self.picker = self.picker.initForOpeningContentTypes_(
             document_types)
-        picker.allowsMultipleSelection = self.allowsMultipleSelection
+        self.picker.allowsMultipleSelection = self.allowsMultipleSelection
 
         def local_callback(fnames_c: objc_id) -> None:
             # convert the NSArray to a Python list
@@ -129,8 +130,8 @@ class IOSFileOpen(core.AsyncService):
         # Set the service callback
         self.delegate.set_serviceCallback(local_callback)  # type: ignore
         # Set the delegate
-        picker.delegate = self.delegate
+        self.picker.delegate = self.delegate
         # Present the document picker
         keyWindow = UIApplication.sharedApplication.keyWindow  # type: ignore
         keyWindow.rootViewController.presentViewController_animated_completion_(
-            picker, True,  None)
+            self.picker, True,  None)

@@ -1,7 +1,12 @@
 
+0.1.1.8
+------------------------
+1- Changed the weak reference of pickers in open_file.ios and
+photo_picker_ios.py.
+
 0.1.1.7
 ------------------------
-1- Update license reference..
+1- Update license reference.
 
 0.1.1.6
 ------------------------

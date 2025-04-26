@@ -73,6 +73,7 @@ class IOSPhotoPicker(core.AsyncService):
         # and can be deleted without any reference in Python side
         self.delegate = PhotoPickerDelegate.alloc().init_()
         self.imagePickerReturn = imagePickerReturn
+        self.picker = None
 
     @safe_async_call(log)
     async def handle_event(self,
@@ -83,8 +84,8 @@ class IOSPhotoPicker(core.AsyncService):
         if service_callback is None:
             raise ValueError("service_callback must be provided")
 
-        picker = UIImagePickerController.alloc().init()  # type: ignore
-        picker.sourceType = 0  # 0 = Photo Library
+        self.picker = UIImagePickerController.alloc().init()  # type: ignore
+        self.picker.sourceType = 0  # 0 = Photo Library
 
         def local_callback(info_c: objc_id) -> None:
             # Convert the NSDictionary to a Python dictionary
@@ -108,26 +109,11 @@ class IOSPhotoPicker(core.AsyncService):
                             service_callback(Path(path_str))
                             return
                 case ImagePickerReturn.IMAGE:
-                    # new version of swift sugests to use pngData()
-                    # But obejective-c still uses UIImagePNGRepresentation
-                    # So, I directly load the imapge from the URL
-                    # from rubicon.objc.runtime import load_library
-                    # uiKit = load_library("UIKit")
-                    # for key, value in info_dict.items():
-                    #     if py_from_ns(key) == "UIImagePickerControllerOriginalImage":
-                    #     png = uiKit.UIImagePNGRepresentation(
-                    #         value)  # type: ignore
-                    #     from PIL import Image
-                    #     service_callback( Image.open(io.BytesIO(png)))
-                    #     return
                     path_str = ""
-                    # file = None
                     for key, value in info_dict.items():
                         if py_from_ns(key) == "UIImagePickerControllerImageURL":
                             path_str: str = py_from_ns(
                                 value.path)  # type: ignore
-                        # if py_from_ns(key) == "UIImagePickerControllerOriginalImage":
-                        #     file = value
                     if path_str != "":
                         from PIL import Image
 
@@ -140,8 +126,8 @@ class IOSPhotoPicker(core.AsyncService):
                     # Set the service callback
         self.delegate.set_serviceCallback(local_callback)  # type: ignore
         # Set the delegate
-        picker.delegate = self.delegate
+        self.picker.delegate = self.delegate
         # Present the photo picker
         keyWindow = UIApplication.sharedApplication.keyWindow  # type: ignore
         keyWindow.rootViewController.presentViewController_animated_completion_(
-            picker, True, None)
+            self.picker, True, None)
