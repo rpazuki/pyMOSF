@@ -14,6 +14,7 @@ from rubicon.objc import (
 from rubicon.objc.runtime import Foundation, load_library, objc_id
 
 import pyMOSF.core as core
+from pyMOSF.config import Dict
 from pyMOSF.core import safe_async_call
 
 log = logging.getLogger(__name__)
@@ -121,10 +122,10 @@ class IOSFileOpen(core.AsyncService):
                 fnames.append(dest_path)
 
             if self.allowsMultipleSelection:
-                service_callback(fnames)
+                service_callback(Dict(files=fnames))
             else:
                 if len(fnames) > 0:
-                    service_callback(fnames[0])
+                    service_callback(Dict(file=fnames[0]))
         # Set the service callback
         self.delegate.set_serviceCallback(local_callback)  # type: ignore
         # Set the delegate
