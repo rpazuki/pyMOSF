@@ -99,8 +99,8 @@ class IOSFileOpen(core.AsyncService):
         document_types = [objc_const(self.libcf, item)
                           for item in self.document_types]
         self.picker = UIDocumentPickerViewController.alloc()  # type: ignore
-        self.picker = self.picker.initForOpeningContentTypes_(
-            document_types)
+        self.picker = self.picker.initForOpeningContentTypes_asCopy_(
+            document_types, True)
         self.picker.allowsMultipleSelection = self.allowsMultipleSelection
 
         def local_callback(fnames_c: objc_id) -> None:
