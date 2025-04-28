@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyMOSF"
-version = "0.1.1.8"
+version = "0.1.1.9"
 description = "Python package for Multi-OS, Multi-Framework UI apps."
 authors = [
     {name = "Roozbeh H. Pazuki", email = "rpazuki@gmail.com"}
