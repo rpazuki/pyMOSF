@@ -1,4 +1,8 @@
 
+0.1.1.9
+------------------------
+1- Specify UIDocumentPickerViewController in open_file.ios opens for copy.
+
 0.1.1.8
 ------------------------
 1- Changed the weak reference of pickers in open_file.ios and
